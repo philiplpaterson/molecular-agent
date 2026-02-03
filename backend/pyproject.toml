@@ -1,0 +1,35 @@
+[project]
+name = "molecularagent-backend"
+version = "0.1.0"
+description = "MolecularAgent - AI agent platform for drug discovery"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]>=0.115.0",
+    "sqlmodel>=0.0.22",
+    "pydantic-settings>=2.6.0",
+    "psycopg[binary]>=3.2.0",
+    "alembic>=1.14.0",
+    "rdkit>=2024.3.0",
+    "pydantic-ai[openai,anthropic]>=0.1.0",
+    "redis>=5.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.27.0",
+    "ruff>=0.7.0",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
