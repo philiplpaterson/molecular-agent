@@ -170,7 +170,7 @@ class RAGService:
                 "chembl_id": compound.get("chembl_id", ""),
                 "smiles": compound.get("smiles", ""),
                 "name": compound.get("name", ""),
-                "max_phase": int(compound.get("max_phase", 0) or 0),
+                "max_phase": int(float(compound.get("max_phase", 0) or 0)), # TODO: Investigate float vs int here
                 "molecule_type": compound.get("molecule_type", ""),
                 "therapeutic_areas": compound.get("therapeutic_areas", ""),
                 "source": "chembl",
