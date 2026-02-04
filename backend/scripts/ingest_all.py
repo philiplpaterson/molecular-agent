@@ -36,7 +36,7 @@ def main():
     parser.add_argument("--skip-pubmed", action="store_true", help="Skip PubMed ingestion")
     parser.add_argument("--skip-chembl", action="store_true", help="Skip ChEMBL ingestion")
     parser.add_argument("--pubmed-max", type=int, default=100, help="Max PubMed results per term")
-    parser.add_argument("--chembl-max", type=int, default=500, help="Max ChEMBL approved drugs")
+    parser.add_argument("--chembl-max", type=int, default=1500, help="Max ChEMBL approved drugs")
 
     args = parser.parse_args()
 
