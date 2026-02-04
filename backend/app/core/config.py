@@ -49,5 +49,14 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4o"
     ANTHROPIC_MODEL: str = "claude-sonnet-4-20250514"
 
+    # ChromaDB
+    CHROMADB_HOST: str = "localhost"
+    CHROMADB_PORT: int = 8000
+
+    @computed_field
+    @property
+    def CHROMADB_URL(self) -> str:
+        return f"http://{self.CHROMADB_HOST}:{self.CHROMADB_PORT}"
+
 
 settings = Settings()

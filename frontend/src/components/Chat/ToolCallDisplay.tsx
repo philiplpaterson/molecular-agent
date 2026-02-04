@@ -11,6 +11,9 @@ const TOOL_ICONS: Record<string, string> = {
   check_drug_likeness: "💊",
   similarity_search: "🔍",
   generate_molecules: "🧬",
+  // RAG tools
+  search_literature: "📚",
+  search_compounds: "🧪",
 };
 
 const TOOL_LABELS: Record<string, string> = {
@@ -19,6 +22,9 @@ const TOOL_LABELS: Record<string, string> = {
   check_drug_likeness: "Drug-Likeness Check",
   similarity_search: "Similarity Search",
   generate_molecules: "Generate Molecules",
+  // RAG tools
+  search_literature: "Search Literature",
+  search_compounds: "Search Compounds",
 };
 
 export default function ToolCallDisplay({ toolCall }: ToolCallDisplayProps) {

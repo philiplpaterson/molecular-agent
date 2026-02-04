@@ -1,5 +1,7 @@
 from app.tools.base import BaseTool
+from app.tools.compound_search import CompoundSearchTool
 from app.tools.drug_likeness import DrugLikenessTool
+from app.tools.literature_search import LiteratureSearchTool
 from app.tools.molecule_generator import MoleculeGeneratorTool
 from app.tools.property_predictor import PropertyPredictorTool
 from app.tools.similarity_search import SimilaritySearchTool
@@ -12,6 +14,9 @@ __all__ = [
     "DrugLikenessTool",
     "SimilaritySearchTool",
     "MoleculeGeneratorTool",
+    # RAG tools
+    "LiteratureSearchTool",
+    "CompoundSearchTool",
 ]
 
 AVAILABLE_TOOLS: dict[str, type[BaseTool]] = {
@@ -20,4 +25,7 @@ AVAILABLE_TOOLS: dict[str, type[BaseTool]] = {
     "check_drug_likeness": DrugLikenessTool,
     "similarity_search": SimilaritySearchTool,
     "generate_molecules": MoleculeGeneratorTool,
+    # RAG tools
+    "search_literature": LiteratureSearchTool,
+    "search_compounds": CompoundSearchTool,
 }

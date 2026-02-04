@@ -15,6 +15,9 @@ RUN uv pip install --system --no-cache ".[dev]"
 # Copy application code
 COPY ./app /app/app
 
+# Copy app scripts
+COPY ./scripts /app/scripts
+
 EXPOSE 8000
 
 CMD ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]

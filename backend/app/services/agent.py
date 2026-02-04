@@ -10,7 +10,9 @@ from app import crud
 from app.core.config import settings
 from app.models import ConversationCreate, MessageCreate
 from app.tools import (
+    CompoundSearchTool,
     DrugLikenessTool,
+    LiteratureSearchTool,
     MoleculeGeneratorTool,
     PropertyPredictorTool,
     SimilaritySearchTool,
@@ -40,14 +42,23 @@ def get_model_name() -> str:
 SYSTEM_PROMPT = """You are MolecularAgent, an AI assistant specialized in drug discovery and molecular analysis.
 
 You have access to the following tools:
+
+MOLECULAR ANALYSIS TOOLS:
 1. validate_smiles - Validate SMILES strings and convert to canonical form
 2. predict_properties - Predict molecular properties (MW, LogP, TPSA, etc.)
 3. check_drug_likeness - Check Lipinski's Rule of Five for drug-likeness assessment
 4. similarity_search - Calculate molecular similarity between compounds
 5. generate_molecules - Generate random drug-like molecules
 
+KNOWLEDGE RETRIEVAL TOOLS (RAG):
+6. search_literature - Search scientific literature (PubMed abstracts) for papers and research
+7. search_compounds - Search ChEMBL for compounds and clinical candidates
+
 When users ask about molecules, use the appropriate tools to provide accurate information.
 Always validate SMILES strings before using them in other tools.
+For questions about scientific research, use the search_literature tool.
+For questions about compounds and clinical candidates, use the search_compounds tool.
+Cite sources when providing information from the literature.
 Explain results in a clear, accessible way while maintaining scientific accuracy.
 """
 
@@ -134,6 +145,48 @@ def generate_molecules(ctx: RunContext[AgentDeps], num_molecules: int, seed_smil
     ctx.deps.tool_calls.append({
         "name": "generate_molecules",
         "arguments": {"num_molecules": num_molecules, "seed_smiles": seed_smiles},
+        "result": result,
+    })
+    return result
+
+
+# --- RAG Tools ---
+
+
+@molecular_agent.tool
+def search_literature(ctx: RunContext[AgentDeps], query: str, num_results: int = 5) -> dict:
+    """
+    Search scientific literature (PubMed abstracts) for relevant papers.
+
+    Args:
+        query: The search query (e.g., 'mechanism of aspirin', 'EGFR inhibitors')
+        num_results: Number of results to return (1-10, default 5)
+    """
+    tool = LiteratureSearchTool()
+    result = tool.execute(query=query, num_results=num_results)
+    ctx.deps.tool_calls.append({
+        "name": "search_literature",
+        "arguments": {"query": query, "num_results": num_results},
+        "result": result,
+    })
+    return result
+
+
+@molecular_agent.tool
+def search_compounds(ctx: RunContext[AgentDeps], query: str, num_results: int = 5, min_phase: int | None = None) -> dict:
+    """
+    Search ChEMBL for compounds including approved drugs and clinical candidates.
+
+    Args:
+        query: The search query (e.g., 'kinase inhibitor', 'anticancer')
+        num_results: Number of results to return (1-10, default 5)
+        min_phase: Minimum clinical phase filter (1-4, where 4 is approved)
+    """
+    tool = CompoundSearchTool()
+    result = tool.execute(query=query, num_results=num_results, min_phase=min_phase)
+    ctx.deps.tool_calls.append({
+        "name": "search_compounds",
+        "arguments": {"query": query, "num_results": num_results, "min_phase": min_phase},
         "result": result,
     })
     return result
