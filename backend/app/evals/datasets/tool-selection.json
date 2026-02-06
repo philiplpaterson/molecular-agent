@@ -1,0 +1,187 @@
+{
+  "name": "tool-selection",
+  "description": "Test cases for evaluating correct tool selection by the MolecularAgent. Covers all 7 tools across various query types.",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "ts-001",
+      "query": "Is CCO a valid SMILES string?",
+      "expected_tools": ["validate_smiles"],
+      "expected_contains": ["valid", "ethanol"],
+      "expected_not_contains": ["invalid", "error"],
+      "tags": ["tool-selection", "validate_smiles", "simple"],
+      "description": "Basic SMILES validation for ethanol"
+    },
+    {
+      "id": "ts-002",
+      "query": "Check if this molecule is valid: CC(=O)Oc1ccccc1C(=O)O",
+      "expected_tools": ["validate_smiles"],
+      "expected_contains": ["valid", "aspirin"],
+      "expected_not_contains": ["invalid"],
+      "tags": ["tool-selection", "validate_smiles", "drug"],
+      "description": "SMILES validation for aspirin"
+    },
+    {
+      "id": "ts-003",
+      "query": "Is XYZ123 a valid molecule?",
+      "expected_tools": ["validate_smiles"],
+      "expected_contains": ["invalid"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "validate_smiles", "invalid"],
+      "description": "Invalid SMILES detection"
+    },
+    {
+      "id": "ts-004",
+      "query": "What are the molecular properties of caffeine (Cn1cnc2c1c(=O)n(c(=O)n2C)C)?",
+      "expected_tools": ["predict_properties"],
+      "expected_contains": ["molecular weight", "logp"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "predict_properties", "drug"],
+      "description": "Property prediction for caffeine"
+    },
+    {
+      "id": "ts-005",
+      "query": "Calculate the LogP and molecular weight of ibuprofen (CC(C)Cc1ccc(cc1)C(C)C(=O)O)",
+      "expected_tools": ["predict_properties"],
+      "expected_contains": ["logp", "weight"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "predict_properties", "drug"],
+      "description": "Property prediction for ibuprofen"
+    },
+    {
+      "id": "ts-006",
+      "query": "Does this molecule pass Lipinski's Rule of Five: CC(=O)Oc1ccccc1C(=O)O",
+      "expected_tools": ["check_drug_likeness"],
+      "expected_contains": ["lipinski", "drug"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "check_drug_likeness", "drug"],
+      "description": "Drug-likeness check for aspirin"
+    },
+    {
+      "id": "ts-007",
+      "query": "Is CCO drug-like according to Lipinski rules?",
+      "expected_tools": ["check_drug_likeness"],
+      "expected_contains": ["lipinski"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "check_drug_likeness", "simple"],
+      "description": "Drug-likeness check for ethanol"
+    },
+    {
+      "id": "ts-008",
+      "query": "How similar is aspirin to ibuprofen?",
+      "expected_tools": ["similarity_search"],
+      "expected_contains": ["similarity", "tanimoto"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "similarity_search", "comparison"],
+      "description": "Similarity comparison between two drugs"
+    },
+    {
+      "id": "ts-009",
+      "query": "Find molecules similar to CCO from this list: CCCO, CC(C)O, CCCCO",
+      "expected_tools": ["similarity_search"],
+      "expected_contains": ["similarity"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "similarity_search", "list"],
+      "description": "Similarity search against a list"
+    },
+    {
+      "id": "ts-010",
+      "query": "Generate 5 random drug-like molecules",
+      "expected_tools": ["generate_molecules"],
+      "expected_contains": ["generated", "molecule"],
+      "expected_not_contains": ["error"],
+      "tags": ["tool-selection", "generate_molecules", "generation"],
+      "description": "Random molecule generation"
+    },
+    {
+      "id": "ts-011",
+      "query": "Create 3 molecules similar to aspirin",
+      "expected_tools": ["generate_molecules"],
+      "expected_contains": ["generated", "molecule"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "generate_molecules", "seeded"],
+      "description": "Seeded molecule generation"
+    },
+    {
+      "id": "ts-012",
+      "query": "What research has been done on EGFR inhibitors?",
+      "expected_tools": ["search_literature"],
+      "expected_contains": ["egfr"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "search_literature", "rag"],
+      "description": "Literature search for EGFR inhibitors"
+    },
+    {
+      "id": "ts-013",
+      "query": "Find papers about the mechanism of action of aspirin",
+      "expected_tools": ["search_literature"],
+      "expected_contains": ["aspirin"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "search_literature", "rag", "mechanism"],
+      "description": "Literature search for aspirin mechanism"
+    },
+    {
+      "id": "ts-014",
+      "query": "What compounds are approved for treating cancer?",
+      "expected_tools": ["search_compounds"],
+      "expected_contains": ["cancer", "compound"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "search_compounds", "rag"],
+      "description": "Compound search for cancer drugs"
+    },
+    {
+      "id": "ts-015",
+      "query": "Find kinase inhibitors in clinical trials",
+      "expected_tools": ["search_compounds"],
+      "expected_contains": ["kinase"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "search_compounds", "rag", "clinical"],
+      "description": "Compound search for kinase inhibitors"
+    },
+    {
+      "id": "ts-016",
+      "query": "Validate CCO and then check if it's drug-like",
+      "expected_tools": ["validate_smiles", "check_drug_likeness"],
+      "expected_contains": ["valid", "lipinski"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "multi-tool", "sequential"],
+      "description": "Multi-tool: validation then drug-likeness"
+    },
+    {
+      "id": "ts-017",
+      "query": "What are the properties of aspirin and is it drug-like?",
+      "expected_tools": ["predict_properties", "check_drug_likeness"],
+      "expected_contains": ["weight", "lipinski"],
+      "expected_not_contains": [],
+      "tags": ["tool-selection", "multi-tool", "properties"],
+      "description": "Multi-tool: properties and drug-likeness"
+    },
+    {
+      "id": "ts-018",
+      "query": "Hello, how are you?",
+      "expected_tools": [],
+      "expected_contains": [],
+      "expected_not_contains": ["error", "invalid"],
+      "tags": ["no-tool", "greeting"],
+      "description": "No tool needed for greeting"
+    },
+    {
+      "id": "ts-019",
+      "query": "What is a SMILES string?",
+      "expected_tools": [],
+      "expected_contains": ["smiles", "molecule", "representation"],
+      "expected_not_contains": [],
+      "tags": ["no-tool", "explanation"],
+      "description": "No tool needed for explanation"
+    },
+    {
+      "id": "ts-020",
+      "query": "Analyze aspirin (CC(=O)Oc1ccccc1C(=O)O) completely - validate it, get its properties, and check drug-likeness",
+      "expected_tools": ["validate_smiles", "predict_properties", "check_drug_likeness"],
+      "expected_contains": ["valid", "weight", "lipinski"],
+      "expected_not_contains": ["invalid", "error"],
+      "tags": ["tool-selection", "multi-tool", "comprehensive"],
+      "description": "Comprehensive multi-tool analysis"
+    }
+  ]
+}
